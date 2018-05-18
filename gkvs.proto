@@ -2,214 +2,132 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "gkvs.proto";
-option java_outer_classname = "GenericKeyValueProto";
+option java_outer_classname = "GenericStoreProto";
 option objc_class_prefix = "GKV";
 
 package gkvs;
 
-service GenericKeyValueService {
+service GenericStore {
 
-    // executes a single operation
+    rpc getHead(KeyOperation) returns (HeadResult) {}
 
-    rpc execute(Operation) returns (Result) {}
+    rpc multiGetHead(BatchKeyOperation) returns (stream HeadResult) {}
 
-    // executes a batch of opeations in one request
+    rpc get(KeyOperation) returns (RecordResult) {}
 
-    rpc executeBatch(BatchOperation) returns (BatchResult) {}
+    rpc multiGet(BatchKeyOperation) returns (stream RecordResult) {}
 
-    // stores large values
+    rpc scanHead(ScanOperation) returns (stream HeadResult) {}
 
-    rpc streamIn(stream FragmentedOperation) returns (FragmentedResult) {}
+    rpc scan(ScanOperation) returns (stream RecordResult) {}
 
-    // retrieves large values
+    rpc put(PutOperation) returns (Status) {}
 
-    rpc streamOut(FragmentedOperation) returns (stream FragmentedResult) {}
+    rpc compareAndPut(PutOperation) returns (Status) {}
 
-    // run async
+    rpc putAll(stream PutOperation) returns (stream Status) {}
 
-    rpc run(stream Operation) returns (stream Result) {}
-}
+    rpc remove(KeyOperation) returns (Status) {}
 
-message BatchOperation {
-    repeated Operation list = 1;
-}
-
-message BatchResult {
-    repeated Result list = 1;
-}
-
-message Operation
-{
-    enum Type
-    {
-
-        NOP = 0;
-
-        // record operations
-        GET_RECORD = 1;
-        EXIST_RECORD = 2;
-        PUT_RECORD = 3;
-        REMOVE_RECORD = 4;
-        CAS_RECORD = 5;
-
-        // cell operations
-        GET_CELL = 11;
-        EXIST_CELL = 12;
-        PUT_CELL = 13;
-        REMOVE_CELL = 14;
-        CAS_CELL = 15;
-    }
-
-    // optional field for operation id, used in run method
-    oneof operationId {
-       int64  lid = 1;   // long id of operation
-       string sid = 2;   // string id of operation
-    }
-
-    // required type of the operation
-    Type type = 3;
-
-    // required field
-    string tableName = 4;
-
-    // required field
-    string recordKey = 5;
-
-    // optional field for CELL operations
-    string columnKey = 6;
-
-    // optional point in time field in milliseconds, used for history storages
-    fixed64 pitMillis = 7;
-
-    // TTL for Put and CAS operations
-    int32 ttlSeconds = 8;
-
-    // version for CompareAndSet
-    oneof version {
-      int64 lver = 9;   // some data stores support version, some not
-      string sver = 10;
-    }
-
-    // RECORD operations use this:
-    map<string, bytes> newKeyValues = 11;
-
-    // CELL operations use this:
-    bytes  newValue = 12;
+    rpc removeAll(BatchKeyOperation) returns (Status) {}
 
 }
 
-message Result {
+message Status {
 
-    enum Status
-    {
-        SUCCESS = 0;
-        ERROR = 1;
+    enum Code {
+         SUCCESS = 0;
+         TABLE_NOT_FOUND = 1;
+         ACCESS_DENY = 2;
+         INTERNAL_ERROR = 3;
+         CLUSTER_DOWN = 4;
     }
 
-    enum ValueType
-    {
-        NO_VALUE = 0;
-        BOOL_VALUE = 1;
-        RECORD_VALUE = 2;
-        CELL_VALUE = 3;
-    }
-
-    // optional field for operation id, used in run method
-    oneof operationId {
-       int64  lid = 1;   // long id of operation
-       string sid = 2;   // string id of operation
-    }
-
-    Status status  = 3;
-
-    oneof payload {
-       ValueType valueType = 4;
-       ErrorPayload errorPayload = 10;
-    }
-
-    oneof value {
-       bool boolValue = 12;
-       RecordValue recordValue = 13;
-       CellValue cellValue = 14;
-    }
-}
-
-message ErrorPayload {
-    int32 errorCode = 1;
-    string errorMessage = 2;
-    string className = 3;
-    string stackTrace = 4;
-}
-
-message CellValue {
-    oneof version {
-      int64 lver = 1;   // some data stores support version, some not, it could be a record version
-      string sver = 2;
-    }
-    bytes value = 3;
-}
-
-message RecordValue {
-    oneof version {
-      int64 lver = 1;   // some data stores support version, some not
-      string sver = 2;
-    }
-    map<string, bytes> keyValues = 3;
-}
-
-message FragmentedOperation
-{
-    enum Type
-    {
-        NOP = 0;
-        GET = 1;
-        PUT = 2;
-        REMOVE = 3;
-    }
-
-    // required type of the operation
-    Type type = 3;
-
-    // required field
-    string tableName = 4;
-
-    // required field
-    string recordKey = 5;
-
-    // TTL for Put operation
-    int32 ttlSeconds = 6;
-
-    // fragment number, used in PUT operation
-    int32 fragmentNum = 7;
-
-    // part of the value, used in PUT operation
-    bytes fragmentValue = 8;
+    Code code = 1;
+    bool updated = 2;
+    int32 errorCode = 3;
+    string errorMessage = 4;
 
 }
 
 
-message FragmentedResult {
+message Head {
 
-    enum Status
-    {
-        SUCCESS = 0;
-        ERROR = 1;
+    int64 version = 1;
+    repeated string columnKey = 2;
+
+}
+
+message HeadResult {
+
+    Status status = 1;
+    Head head = 2;
+}
+
+message Record {
+
+    int64 version = 1;
+    map<string, bytes> columns = 2;
+
+}
+
+message RecordResult {
+
+    Status status  = 1;
+    Record record = 2;
+}
+
+
+message Key {
+
+    string tableName = 1;
+
+    oneof recordRef {
+      string  recordKey = 2;
+      bytes   recordHash = 3;
     }
 
-    enum ValueType
-    {
-        NO_VALUE = 0;
-        FRAGMENT_VALUE = 1;
-    }
+    // optional, if not specified then all columns will be retrieved
+    repeated string columnKey = 4;
 
-    Status status  = 3;
+}
 
-    oneof payload {
-       ValueType valueType = 4;
-       ErrorPayload errorPayload = 10;
-    }
+message KeyResult {
 
-    int32 fragmentNum = 5;
-    bytes fragmentValue = 13;
+   Status status  = 1;
+   Key key = 2;
+
+}
+
+message Operation {
+
+   int32 timeoutMls = 1;
+   fixed64 pit = 2;
+
+}
+
+message ScanOperation {
+
+   Operation op = 1;
+
+}
+
+message KeyOperation {
+
+   Operation op = 1;
+   Key key = 2;
+
+}
+
+message PutOperation {
+
+   Operation op = 1;
+   Record record = 2;
+   int32 ttlSec = 3;
+}
+
+message BatchKeyOperation {
+
+   KeyOperation ops = 1;
 
 }
