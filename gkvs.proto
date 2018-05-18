@@ -12,13 +12,13 @@ service GenericKeyValueService {
     // executes a single operation
 
     rpc execute(Operation) returns (Result) {}
-    
+
     // executes a batch of opeations in one request
-    
-    rpc execute(BatchOperation) returns (BatchResult) {}
-    
+
+    rpc executeBatch(BatchOperation) returns (BatchResult) {}
+
     // stores large values
-    
+
     rpc streamIn(stream FragmentedOperation) returns (FragmentedResult) {}
 
     // retrieves large values
@@ -26,7 +26,7 @@ service GenericKeyValueService {
     rpc streamOut(FragmentedOperation) returns (stream FragmentedResult) {}
 
     // run async
-    
+
     rpc run(stream Operation) returns (stream Result) {}
 }
 
@@ -42,13 +42,16 @@ message Operation
 {
     enum Type
     {
-        // record operations  
+
+        NOP = 0;
+
+        // record operations
         GET_RECORD = 1;
         EXIST_RECORD = 2;
         PUT_RECORD = 3;
         REMOVE_RECORD = 4;
         CAS_RECORD = 5;
-       
+
         // cell operations
         GET_CELL = 11;
         EXIST_CELL = 12;
@@ -58,77 +61,73 @@ message Operation
     }
 
     // optional field for operation id, used in run method
-    one_of {
+    oneof operationId {
        int64  lid = 1;   // long id of operation
        string sid = 2;   // string id of operation
     }
 
     // required type of the operation
     Type type = 3;
-    
+
     // required field
     string tableName = 4;
-    
+
     // required field
-    string recordKey = 5; 
-    
+    string recordKey = 5;
+
     // optional field for CELL operations
-    string columnKey = 6;   
-    
+    string columnKey = 6;
+
     // optional point in time field in milliseconds, used for history storages
-    fixed64 pitMillis = 7;  
-    
+    fixed64 pitMillis = 7;
+
     // TTL for Put and CAS operations
     int32 ttlSeconds = 8;
-    
+
     // version for CompareAndSet
-    one_of {
+    oneof version {
       int64 lver = 9;   // some data stores support version, some not
       string sver = 10;
     }
-    
-    // new values for Put and CAS operations
-    one_of {
-    
-       // RECORD operations use this:
-       map<string, bytes> newKeyValues = 11;
-       
-       // CELL operations use this:
-       bytes  newValue = 12;
-    }
-    
+
+    // RECORD operations use this:
+    map<string, bytes> newKeyValues = 11;
+
+    // CELL operations use this:
+    bytes  newValue = 12;
+
 }
 
 message Result {
 
     enum Status
     {
-        SUCCESS = 1;
-        ERROR = 2;
+        SUCCESS = 0;
+        ERROR = 1;
     }
 
     enum ValueType
     {
-        NO_VALUE = 1;
-        BOOL_VALUE = 2;
-        RECORD_VALUE = 3;
-        CELL_VALUE = 4;
+        NO_VALUE = 0;
+        BOOL_VALUE = 1;
+        RECORD_VALUE = 2;
+        CELL_VALUE = 3;
     }
-    
+
     // optional field for operation id, used in run method
-    one_of {
+    oneof operationId {
        int64  lid = 1;   // long id of operation
        string sid = 2;   // string id of operation
     }
 
     Status status  = 3;
-    
-    one_of {
+
+    oneof payload {
        ValueType valueType = 4;
        ErrorPayload errorPayload = 10;
     }
-    
-    one_of {
+
+    oneof value {
        bool boolValue = 12;
        RecordValue recordValue = 13;
        CellValue cellValue = 14;
@@ -143,7 +142,7 @@ message ErrorPayload {
 }
 
 message CellValue {
-    one_of {
+    oneof version {
       int64 lver = 1;   // some data stores support version, some not, it could be a record version
       string sver = 2;
     }
@@ -151,7 +150,7 @@ message CellValue {
 }
 
 message RecordValue {
-    one_of {
+    oneof version {
       int64 lver = 1;   // some data stores support version, some not
       string sver = 2;
     }
@@ -162,7 +161,7 @@ message FragmentedOperation
 {
     enum Type
     {
-        // record operations  
+        NOP = 0;
         GET = 1;
         PUT = 2;
         REMOVE = 3;
@@ -170,22 +169,22 @@ message FragmentedOperation
 
     // required type of the operation
     Type type = 3;
-    
+
     // required field
     string tableName = 4;
-    
+
     // required field
-    string recordKey = 5; 
+    string recordKey = 5;
 
     // TTL for Put operation
     int32 ttlSeconds = 6;
-    
+
     // fragment number, used in PUT operation
-    int32 fragmentNum = 7;   
-    
+    int32 fragmentNum = 7;
+
     // part of the value, used in PUT operation
     bytes fragmentValue = 8;
-    
+
 }
 
 
@@ -193,24 +192,24 @@ message FragmentedResult {
 
     enum Status
     {
-        SUCCESS = 1;
-        ERROR = 2;
+        SUCCESS = 0;
+        ERROR = 1;
     }
 
     enum ValueType
     {
-        NO_VALUE = 1;
-        FRAGMENT_VALUE = 3;
+        NO_VALUE = 0;
+        FRAGMENT_VALUE = 1;
     }
 
     Status status  = 3;
-    
-    one_of {
+
+    oneof payload {
        ValueType valueType = 4;
        ErrorPayload errorPayload = 10;
     }
 
     int32 fragmentNum = 5;
     bytes fragmentValue = 13;
-    
+
 }
