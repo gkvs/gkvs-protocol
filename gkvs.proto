@@ -37,26 +37,34 @@ message Status {
 
     enum Code {
          SUCCESS = 0;
+         INVALID_TABLE = 3;
          BAD_REQUEST = 1;
-         NO_TABLE = 2;
-         NO_CONNECTION = 3;
-         FORBIDDEN = 4;
-         TIMEOUT = 5;
-         OVERLOAD = 6;
-         CONCURRENT = 7;
-         UNSUPPORTED_OP = 8;
-         ABORTED_OP = 9;
-         INTERNAL_ERR = 10;
+         POLICY_VIOLATION = 2;
+         NETWORK_BREAK = 4;
+         AUTH = 5;           // security configuration and authentication
+         FORBIDDEN = 6;      // authorization
+         TIMEOUT = 7;
+         OVERLOAD = 8;
+         OVERFLOW = 9;
+         CONCURRENT_UPDATE = 10;
+         ABORTED_OPERATION = 12;
+         UNSUPPORTED_OPERATION = 11;
+         ENDED_OPERATION = 13;
+         INTERNAL_ERROR = 14;
+         SYSTEM_ERROR = 15;
     }
 
-    enum Level {
+    // tier number for error code
+    enum Tier {
          SERVICE = 0;
          DRIVER = 1;
+         CLUSTER = 2;
+         DATA_NODE = 3;
     }
 
     Code code = 1;
-    Level level = 2;
-    bool updated = 3;
+    Tier tier = 2;
+    bool updated = 3;    // return true if state was updated, required for compareAndPut
     int32 errorCode = 4;
     string errorMessage = 5;
 
