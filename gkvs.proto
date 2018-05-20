@@ -45,7 +45,7 @@ message Status {
          FORBIDDEN = 6;      // authorization
          TIMEOUT = 7;
          OVERLOAD = 8;
-         OVERFLOW = 9;
+         DATA_OVERFLOW = 9;
          CONCURRENT_UPDATE = 10;
          ABORTED_OPERATION = 12;
          UNSUPPORTED_OPERATION = 11;
