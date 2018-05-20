@@ -37,24 +37,24 @@ message Status {
 
     enum Code {
          SUCCESS = 0;
-         SUCCESS_END_STREAM = 1;  // for streaming data, end stream marker
-         SUCCESS_UPDATED = 2;     // for compare and put operation that is non-locking algorithm
-         SUCCESS_NOT_UPDATED = 3; // for compare and put operation that is non-locking algorithm
-         ERROR_INVALID_TABLE = 4; // invalid database, namespace, table, catalog, etc.
-         ERROR_BAD_REQUEST = 5;   // invalid parameters in request
-         ERROR_POLICY = 6;        // exists record for operation that requires record and vise versa
-         ERROR_NETWORK = 7;       // all connection errors and network availability
-         ERROR_AUTH = 8;          // security configuration and authentication
-         ERROR_FORBIDDEN = 9;     // authorization
-         ERROR_TIMEOUT = 10;      // all SLA errors
-         ERROR_OVERLOAD = 11;     // all errors related to high load of operations, full queues and etc.
-         ERROR_OVERFLOW = 12;     // all errors related to data space
-         ERROR_LOCKED = 13;       // all tries to update data that was in pessimistic lock
-         ERROR_ABORTED = 14;      // client aborted stream operation
-         ERROR_UNSUPPORTED = 15;  // unsupported commands
-         ERROR_DRIVER = 16;       // data access driver specific errors
-         ERROR_IO = 17;           // file, serialization, network i/o errors
-         ERROR_SYSTEM = 18;       // all unknown errors
+         SUCCESS_END_STREAM = 1;   // for streaming data, end stream marker
+         SUCCESS_NOT_UPDATED = 2;  // for compare and put operation that is non-locking algorithm
+
+         ERROR_RES_NOT_FOUND = 10; // not found: database, namespace, table, catalog, etc.
+         ERROR_BAD_REQUEST = 11;   // invalid parameters in request
+         ERROR_POLICY = 12;        // exists record for operation that requires record and vise versa
+         ERROR_NETWORK = 13;       // all connection errors and network availability
+         ERROR_AUTH = 14;          // security configuration and authentication
+         ERROR_FORBIDDEN = 15;     // authorization
+         ERROR_TIMEOUT = 16;       // all SLA errors
+         ERROR_OVERLOAD = 17;      // all errors related to high load of operations, full queues and etc.
+         ERROR_OVERFLOW = 18;      // all errors related to data space
+         ERROR_LOCKED = 19;        // all tries to update data that was in pessimistic lock
+         ERROR_ABORTED = 20;       // client aborted stream operation
+         ERROR_UNSUPPORTED = 21;   // unsupported commands
+         ERROR_DRIVER = 22;        // data access driver specific errors
+         ERROR_IO = 23;            // file, serialization, network i/o errors
+         ERROR_SYSTEM = 24;        // all unknown errors
     }
 
     Code code = 1;
