@@ -138,8 +138,9 @@ message KeyOperation {
 message PutOperation {
 
    Operation op = 1;
-   Record record = 2;
-   int32 ttlSec = 3;
+   Key key = 2;
+   Record record = 3;
+   int32 ttlSec = 4;
 }
 
 message BatchKeyOperation {
