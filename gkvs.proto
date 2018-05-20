@@ -55,12 +55,13 @@ message Status {
          ERROR_UNSUPPORTED = 22;   // unsupported commands
          ERROR_DRIVER = 23;        // data access driver specific errors
          ERROR_IO = 24;            // file, serialization, network i/o errors
-         ERROR_SYSTEM = 25;        // all unknown errors
+         ERROR_INTERNAL = 25;      // all unknown errors
     }
 
     Code code = 1;
     int32 errorCode = 3;
     string errorMessage = 4;
+    string errorDetails = 5;   // place for stackTrace for Java
 
 }
 
@@ -123,6 +124,7 @@ message Operation {
 message ScanOperation {
 
    Operation op = 1;
+   string tableName = 2;
 
 }
 
