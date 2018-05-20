@@ -37,16 +37,28 @@ message Status {
 
     enum Code {
          SUCCESS = 0;
-         TABLE_NOT_FOUND = 1;
-         ACCESS_DENY = 2;
-         INTERNAL_ERROR = 3;
-         CLUSTER_DOWN = 4;
+         BAD_REQUEST = 1;
+         NO_TABLE = 2;
+         NO_CONNECTION = 3;
+         FORBIDDEN = 4;
+         TIMEOUT = 5;
+         OVERLOAD = 6;
+         CONCURRENT = 7;
+         UNSUPPORTED_OP = 8;
+         ABORTED_OP = 9;
+         INTERNAL_ERR = 10;
+    }
+
+    enum Level {
+         SERVICE = 0;
+         DRIVER = 1;
     }
 
     Code code = 1;
-    bool updated = 2;
-    int32 errorCode = 3;
-    string errorMessage = 4;
+    Level level = 2;
+    bool updated = 3;
+    int32 errorCode = 4;
+    string errorMessage = 5;
 
 }
 
