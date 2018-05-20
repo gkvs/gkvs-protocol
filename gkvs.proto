@@ -44,18 +44,18 @@ message Status {
          ERROR_BAD_REQUEST = 11;   // invalid parameters in request
          ERROR_POLICY = 12;        // exists record for operation that requires record and vise versa
          ERROR_MIGRATION = 13;     // data or connections migration occur during operation
-         ERROR_NETWORK = 13;       // all connection errors and network availability
-         ERROR_AUTH = 14;          // security configuration and authentication
-         ERROR_FORBIDDEN = 15;     // authorization
-         ERROR_TIMEOUT = 16;       // all SLA errors
-         ERROR_OVERLOAD = 17;      // all errors related to high load of operations, full queues and etc.
-         ERROR_OVERFLOW = 18;      // all errors related to data space
-         ERROR_LOCKED = 19;        // all tries to update data that was in pessimistic lock
-         ERROR_ABORTED = 20;       // client aborted stream operation
-         ERROR_UNSUPPORTED = 21;   // unsupported commands
-         ERROR_DRIVER = 22;        // data access driver specific errors
-         ERROR_IO = 23;            // file, serialization, network i/o errors
-         ERROR_SYSTEM = 24;        // all unknown errors
+         ERROR_NETWORK = 14;       // all connection errors and network availability
+         ERROR_AUTH = 15;          // security configuration and authentication
+         ERROR_FORBIDDEN = 16;     // authorization
+         ERROR_TIMEOUT = 17;       // all SLA errors
+         ERROR_OVERLOAD = 18;      // all errors related to high load of operations, full queues and etc.
+         ERROR_OVERFLOW = 19;      // all errors related to data space
+         ERROR_LOCKED = 20;        // all tries to update data that was in pessimistic lock
+         ERROR_ABORTED = 21;       // client aborted stream operation
+         ERROR_UNSUPPORTED = 22;   // unsupported commands
+         ERROR_DRIVER = 23;        // data access driver specific errors
+         ERROR_IO = 24;            // file, serialization, network i/o errors
+         ERROR_SYSTEM = 25;        // all unknown errors
     }
 
     Code code = 1;
