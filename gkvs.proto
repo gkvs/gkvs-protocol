@@ -29,7 +29,7 @@ service GenericStore {
 
     rpc remove(KeyOperation) returns (Status) {}
 
-    rpc multiRemove(BatchKeyOperation) returns (stream Status) {}
+    rpc removeAll(stream KeyOperation) returns (stream Status) {}
 
 }
 
