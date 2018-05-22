@@ -87,7 +87,8 @@ message HeadResult {
 
     Status status = 1;
     int64 sequenceNum = 2;
-    Head head = 3;
+    Key key = 3;
+    Head head = 4;
 }
 
 message BatchHeadResult {
@@ -137,7 +138,7 @@ message KeyResult {
    Status status  = 1;
    int64 sequenceNum = 2;
    Key key = 3;
-
+   
 }
 
 message Operation {
@@ -157,8 +158,8 @@ message ScanOperation {
 message KeyOperation {
 
    Operation op = 1;
-   Key key = 2;
-   int64 sequenceNum = 3;
+   int64 sequenceNum = 2;
+   Key key = 3;
    bool includeKeyInResult = 4;
 
 }
@@ -173,9 +174,9 @@ message BatchKeyOperation {
 message PutOperation {
 
    Operation op = 1;
-   Key key = 2;
-   Record record = 3;
-   int64 sequenceNum = 4;
+   int64 sequenceNum = 2;
+   Key key = 3;
+   Record record = 4;
    int32 ttlSec = 5;
 
 }
