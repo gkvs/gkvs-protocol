@@ -11,11 +11,15 @@ service GenericStore {
 
     rpc getHead(KeyOperation) returns (HeadResult) {}
 
-    rpc multiGetHead(BatchKeyOperation) returns (stream HeadResult) {}
+    rpc multiGetHead(BatchKeyOperation) returns (BatchHeadResult) {}
+
+    rpc getHeadAll(stream KeyOperation) returns (stream HeadResult) {}
 
     rpc get(KeyOperation) returns (RecordResult) {}
 
-    rpc multiGet(BatchKeyOperation) returns (stream RecordResult) {}
+    rpc multiGet(BatchKeyOperation) returns (BatchRecordResult) {}
+
+    rpc getAll(stream KeyOperation) returns (stream RecordResult) {}
 
     rpc scanHead(ScanOperation) returns (stream HeadResult) {}
 
@@ -79,6 +83,12 @@ message HeadResult {
     Head head = 2;
 }
 
+message BatchHeadResult {
+
+    HeadResult list = 1;
+
+}
+
 message Record {
 
     int64 version = 1;
@@ -92,6 +102,11 @@ message RecordResult {
     Record record = 2;
 }
 
+message BatchRecordResult {
+
+    RecordResult list  = 1;
+
+}
 
 message Key {
 
@@ -135,16 +150,16 @@ message KeyOperation {
 
 }
 
+message BatchKeyOperation {
+
+   repeated KeyOperation list = 1;
+
+}
+
 message PutOperation {
 
    Operation op = 1;
    Key key = 2;
    Record record = 3;
    int32 ttlSec = 4;
-}
-
-message BatchKeyOperation {
-
-   repeated KeyOperation ops = 1;
-
 }
