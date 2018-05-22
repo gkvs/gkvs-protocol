@@ -65,10 +65,7 @@ message Status {
     Code code = 1;
 
     // optional reference for operation
-    oneof operationRef {
-      string  operationdKey = 2;
-      int64   operationId = 3;
-    }
+    int64 operationId = 2;
 
     int32 errorCode = 10;
     string errorMessage = 11;
@@ -140,13 +137,10 @@ message KeyResult {
 message Operation {
 
    // optional reference for operation
-   oneof operationRef {
-      string  operationdKey = 2;
-      int64   operationId = 3;
-   }
+   int64   operationId = 1;
 
-   int32 timeoutMls = 10;
-   fixed64 pit = 11;
+   int32 timeoutMls = 2;
+   fixed64 pit = 3;
 
 }
 
