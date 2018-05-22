@@ -63,9 +63,16 @@ message Status {
     }
 
     Code code = 1;
-    int32 errorCode = 3;
-    string errorMessage = 4;
-    string errorDetails = 5;   // place for stackTrace for Java
+
+    // optional reference for operation
+    oneof operationRef {
+      string  operationdKey = 2;
+      int64   operationId = 3;
+    }
+
+    int32 errorCode = 10;
+    string errorMessage = 11;
+    string errorDetails = 12;   // place for stackTrace for Java
 
 }
 
@@ -100,6 +107,7 @@ message RecordResult {
 
     Status status  = 1;
     Record record = 2;
+
 }
 
 message BatchRecordResult {
@@ -131,8 +139,14 @@ message KeyResult {
 
 message Operation {
 
-   int32 timeoutMls = 1;
-   fixed64 pit = 2;
+   // optional reference for operation
+   oneof operationRef {
+      string  operationdKey = 2;
+      int64   operationId = 3;
+   }
+
+   int32 timeoutMls = 10;
+   fixed64 pit = 11;
 
 }
 
@@ -152,8 +166,8 @@ message KeyOperation {
 
 message BatchKeyOperation {
 
-   Operation op = 1;
-   repeated KeyOperation keys = 2;
+   // gets max timeout for the batch
+   repeated KeyOperation operations = 2;
 
 }
 
