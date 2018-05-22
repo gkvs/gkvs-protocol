@@ -99,7 +99,7 @@ message BatchHeadResult {
 message Record {
 
     int64 version = 1;
-    map<string, bytes> column = 2;
+    map<string, bytes> columns = 2;
 
 }
 
