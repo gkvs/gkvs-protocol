@@ -85,7 +85,7 @@ message HeadResult {
 
 message BatchHeadResult {
 
-    HeadResult list = 1;
+    repeated HeadResult results = 1;
 
 }
 
@@ -104,7 +104,7 @@ message RecordResult {
 
 message BatchRecordResult {
 
-    RecordResult list  = 1;
+    repeated RecordResult results  = 1;
 
 }
 
@@ -152,7 +152,8 @@ message KeyOperation {
 
 message BatchKeyOperation {
 
-   repeated KeyOperation list = 1;
+   Operation op = 1;
+   repeated KeyOperation keys = 1;
 
 }
 
