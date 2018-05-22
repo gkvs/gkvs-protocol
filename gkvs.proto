@@ -25,15 +25,15 @@ service GenericStore {
 
     rpc scan(ScanOperation) returns (stream RecordResult) {}
 
-    rpc put(PutOperation) returns (Status) {}
+    rpc put(PutOperation) returns (StatusResult) {}
 
-    rpc compareAndPut(PutOperation) returns (Status) {}
+    rpc compareAndPut(PutOperation) returns (StatusResult) {}
 
-    rpc putAll(stream PutOperation) returns (stream Status) {}
+    rpc putAll(stream PutOperation) returns (stream StatusResult) {}
 
-    rpc remove(KeyOperation) returns (Status) {}
+    rpc remove(KeyOperation) returns (StatusResult) {}
 
-    rpc removeAll(stream KeyOperation) returns (stream Status) {}
+    rpc removeAll(stream KeyOperation) returns (stream StatusResult) {}
 
 }
 
@@ -64,15 +64,17 @@ message Status {
 
     Code code = 1;
 
-    // optional reference for operation
-    int64 operationId = 2;
-
     int32 errorCode = 10;
     string errorMessage = 11;
     string errorDetails = 12;   // place for stackTrace for Java
 
 }
 
+message StatusResult {
+
+    Status status = 1;
+    int64 sequenceNum = 2;
+}
 
 message Head {
 
@@ -84,12 +86,13 @@ message Head {
 message HeadResult {
 
     Status status = 1;
-    Head head = 2;
+    int64 sequenceNum = 2;
+    Head head = 3;
 }
 
 message BatchHeadResult {
 
-    repeated HeadResult results = 1;
+    repeated HeadResult list = 1;
 
 }
 
@@ -103,13 +106,15 @@ message Record {
 message RecordResult {
 
     Status status  = 1;
-    Record record = 2;
+    int64 sequenceNum = 2;
+    Key key = 3;
+    Record record = 4;
 
 }
 
 message BatchRecordResult {
 
-    repeated RecordResult results  = 1;
+    repeated RecordResult list = 1;
 
 }
 
@@ -130,17 +135,15 @@ message Key {
 message KeyResult {
 
    Status status  = 1;
-   Key key = 2;
+   int64 sequenceNum = 2;
+   Key key = 3;
 
 }
 
 message Operation {
 
-   // optional reference for operation
-   int64   operationId = 1;
-
-   int32 timeoutMls = 2;
-   fixed64 pit = 3;
+   int32 timeoutMls = 1;
+   fixed64 pit = 2;
 
 }
 
@@ -155,13 +158,15 @@ message KeyOperation {
 
    Operation op = 1;
    Key key = 2;
+   int64 sequenceNum = 3;
+   bool includeKeyInResult = 4;
 
 }
 
 message BatchKeyOperation {
 
    // gets max timeout for the batch
-   repeated KeyOperation operations = 2;
+   repeated KeyOperation list = 1;
 
 }
 
@@ -170,5 +175,7 @@ message PutOperation {
    Operation op = 1;
    Key key = 2;
    Record record = 3;
-   int32 ttlSec = 4;
+   int64 sequenceNum = 4;
+   int32 ttlSec = 5;
+   
 }
