@@ -92,14 +92,14 @@ message HeadResult {
 
 message BatchHeadResult {
 
-    repeated HeadResult list = 1;
+    repeated HeadResult result = 1;
 
 }
 
 message Record {
 
     int64 version = 1;
-    map<string, bytes> columns = 2;
+    map<string, bytes> column = 2;
 
 }
 
@@ -114,7 +114,7 @@ message RecordResult {
 
 message BatchRecordResult {
 
-    repeated RecordResult list = 1;
+    repeated RecordResult result = 1;
 
 }
 
@@ -166,7 +166,7 @@ message KeyOperation {
 message BatchKeyOperation {
 
    // gets max timeout for the batch
-   repeated KeyOperation list = 1;
+   repeated KeyOperation operation = 1;
 
 }
 
@@ -177,5 +177,5 @@ message PutOperation {
    Record record = 3;
    int64 sequenceNum = 4;
    int32 ttlSec = 5;
-   
+
 }
