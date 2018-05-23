@@ -118,14 +118,14 @@ message Operation {
 enum OutputOptions {
 
     // exclude key
-    VALUE = 1;
-    METADATA_ONLY = 2;
-    VALUE_DIGEST = 3;
+    VALUE = 0;
+    METADATA_ONLY = 1;
+    VALUE_DIGEST = 2;
 
     // include key
-    KEY_VALUE = 4;
-    KEY = 5;
-    KEY_VALUE_DIGEST = 6;
+    KEY_VALUE = 3;
+    KEY = 4;
+    KEY_VALUE_DIGEST = 5;
 
 }
 
