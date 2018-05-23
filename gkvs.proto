@@ -75,8 +75,8 @@ message Value {
     string column = 1;
 
     oneof valueRef {
-      bytes  value = 1;
-      bytes  digest = 2;  // used only in output to check integrity of data
+      bytes  value = 2;
+      bytes  digest = 3;  // used only in output to check integrity of data
     }
 
 }
