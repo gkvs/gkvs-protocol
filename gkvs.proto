@@ -137,12 +137,20 @@ message Select {
 
 }
 
+message Bucket {
+
+    int32 bucketNum = 1;
+    int32 totalNum = 2;
+
+}
+
 message ScanOperation {
 
    Operation op = 1;
    string tableName = 2;
    Select select = 3;
-   OutputOptions output = 4;
+   Bucket bucket = 4;
+   OutputOptions output = 5;
 
 }
 
