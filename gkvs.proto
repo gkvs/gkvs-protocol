@@ -32,6 +32,7 @@ message Status {
     enum Code {
          SUCCESS = 0;
          SUCCESS_NOT_UPDATED = 1;  // for compare and put operation that is non-locking algorithm
+         SUCCESS_END_STREAM = 2;   // in case of end stream, not payload in return
 
          ERROR_RES_NOT_FOUND = 10; // not found: database, namespace, table, catalog, etc.
          ERROR_BAD_REQUEST = 11;   // invalid parameters in request
