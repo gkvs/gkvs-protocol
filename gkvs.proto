@@ -67,7 +67,8 @@ message StatusResult {
 
 message Metadata {
 
-    int64 version = 1;
+    int64 version = 1;    // generation of the record
+    int32 ttl = 2;        // time to live in seconds
 }
 
 message Value {
@@ -110,8 +111,8 @@ message Key {
 
 message Operation {
 
-   int32 timeoutMls = 1;
-   fixed64 pit = 2;
+   int32 timeout = 1;   // timeout in milliseconds
+   int64 pit = 2;       // point in time in milliseconds
 
 }
 
@@ -168,7 +169,7 @@ message PutOperation {
    int64 sequenceNum = 2;
    Key key = 3;
    repeated Value value = 4;
-   int32 ttlSec = 5;
+   int32 ttl = 5;   // time to live in seconds
 
    bool compareAndPut = 6;
    int64 version = 7;
