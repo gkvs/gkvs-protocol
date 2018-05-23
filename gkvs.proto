@@ -76,8 +76,8 @@ message Value {
 
     string column = 1;
 
-    oneof valueRef {
-      bytes  value = 2;
+    oneof value {
+      bytes  raw = 2;
       bytes  digest = 3;  // used only in output to check integrity of data
     }
 
@@ -103,8 +103,8 @@ message Key {
 
     string tableName = 1;
 
-    oneof recordRef {
-      bytes  key = 2;
+    oneof recordKey {
+      bytes  raw = 2;
       bytes  digest = 3;
     }
 
@@ -149,9 +149,13 @@ message ScanOperation {
 
    Operation op = 1;
    string tableName = 2;
-   Select select = 3;
-   Bucket bucket = 4;
-   OutputOptions output = 5;
+
+   oneof query {
+      Select select = 3;
+      Bucket bucket = 4;
+   }
+
+   OutputOptions output = 10;
 
 }
 
@@ -161,7 +165,8 @@ message KeyOperation {
    int64 sequenceNum = 2;
    Key key = 3;
    Select select = 4;
-   OutputOptions output = 5;
+   
+   OutputOptions output = 10;
 
 }
 
