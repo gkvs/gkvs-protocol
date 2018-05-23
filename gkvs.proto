@@ -27,8 +27,6 @@ service GenericStore {
 
     rpc put(PutOperation) returns (StatusResult) {}
 
-    rpc compareAndPut(PutOperation) returns (StatusResult) {}
-
     rpc putAll(stream PutOperation) returns (stream StatusResult) {}
 
     rpc remove(KeyOperation) returns (StatusResult) {}
@@ -133,14 +131,6 @@ message Key {
 
 }
 
-message KeyResult {
-
-   Status status  = 1;
-   int64 sequenceNum = 2;
-   Key key = 3;
-
-}
-
 message Operation {
 
    int32 timeoutMls = 1;
@@ -179,5 +169,6 @@ message PutOperation {
    Key key = 3;
    Record record = 4;
    int32 ttlSec = 5;
+   bool compareAndPut = 6;
 
 }
