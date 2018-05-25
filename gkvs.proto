@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "gkvs.proto";
+option java_package = "com.shvid.gkvs.protos";
 option java_outer_classname = "GenericStoreProto";
 option objc_class_prefix = "GKV";
 
@@ -165,7 +165,7 @@ message KeyOperation {
    int64 sequenceNum = 2;
    Key key = 3;
    Select select = 4;
-   
+
    OutputOptions output = 10;
 
 }
