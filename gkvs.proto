@@ -2,8 +2,8 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "com.shvid.gkvs.protos";
-option java_outer_classname = "GenericStoreProto";
-option objc_class_prefix = "GKV";
+option java_outer_classname = "GenericStoreProtos";
+option objc_class_prefix = "GKVS";
 
 package gkvs;
 
@@ -27,32 +27,34 @@ service GenericStore {
 
 }
 
+enum StatusCode {
+
+     SUCCESS = 0;
+     SUCCESS_NOT_UPDATED = 1;  // for compare and put operation that is non-locking algorithm
+     SUCCESS_END_STREAM = 2;   // in case of end stream, not payload in return
+
+     ERROR_RES_NOT_FOUND = 10; // not found: database, namespace, table, catalog, etc.
+     ERROR_BAD_REQUEST = 11;   // invalid parameters in request
+     ERROR_POLICY = 12;        // exists record for operation that requires record and vise versa
+     ERROR_MIGRATION = 13;     // data or connections migration occur during operation
+     ERROR_NETWORK = 14;       // all connection errors and network availability
+     ERROR_AUTH = 15;          // security configuration and authentication
+     ERROR_FORBIDDEN = 16;     // authorization
+     ERROR_TIMEOUT = 17;       // all SLA errors
+     ERROR_OVERLOAD = 18;      // all errors related to high load of operations, full queues and etc.
+     ERROR_OVERFLOW = 19;      // all errors related to data space
+     ERROR_LOCKED = 20;        // all tries to update data that was in pessimistic lock
+     ERROR_ABORTED = 21;       // client aborted stream operation
+     ERROR_UNSUPPORTED = 22;   // unsupported commands
+     ERROR_DRIVER = 23;        // data access driver specific errors
+     ERROR_IO = 24;            // file, serialization, network i/o errors
+     ERROR_INTERNAL = 25;      // all unknown errors
+     
+}
+
 message Status {
 
-    enum Code {
-         SUCCESS = 0;
-         SUCCESS_NOT_UPDATED = 1;  // for compare and put operation that is non-locking algorithm
-         SUCCESS_END_STREAM = 2;   // in case of end stream, not payload in return
-
-         ERROR_RES_NOT_FOUND = 10; // not found: database, namespace, table, catalog, etc.
-         ERROR_BAD_REQUEST = 11;   // invalid parameters in request
-         ERROR_POLICY = 12;        // exists record for operation that requires record and vise versa
-         ERROR_MIGRATION = 13;     // data or connections migration occur during operation
-         ERROR_NETWORK = 14;       // all connection errors and network availability
-         ERROR_AUTH = 15;          // security configuration and authentication
-         ERROR_FORBIDDEN = 16;     // authorization
-         ERROR_TIMEOUT = 17;       // all SLA errors
-         ERROR_OVERLOAD = 18;      // all errors related to high load of operations, full queues and etc.
-         ERROR_OVERFLOW = 19;      // all errors related to data space
-         ERROR_LOCKED = 20;        // all tries to update data that was in pessimistic lock
-         ERROR_ABORTED = 21;       // client aborted stream operation
-         ERROR_UNSUPPORTED = 22;   // unsupported commands
-         ERROR_DRIVER = 23;        // data access driver specific errors
-         ERROR_IO = 24;            // file, serialization, network i/o errors
-         ERROR_INTERNAL = 25;      // all unknown errors
-    }
-
-    Code code = 1;
+    StatusCode code = 1;
 
     int32 errorCode = 10;
     string errorMessage = 11;
