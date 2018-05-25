@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.shvid.gkvs.protos";
+option java_package = "rocks.gkvs.protos";
 option java_outer_classname = "GenericStoreProtos";
 option objc_class_prefix = "GKVS";
 
@@ -49,7 +49,7 @@ enum StatusCode {
      ERROR_DRIVER = 23;        // data access driver specific errors
      ERROR_IO = 24;            // file, serialization, network i/o errors
      ERROR_INTERNAL = 25;      // all unknown errors
-     
+
 }
 
 message Status {
