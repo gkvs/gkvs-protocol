@@ -120,12 +120,12 @@ message Operation {
 enum OutputOptions {
 
     // exclude key
-    VALUE = 0;
+    VALUE_RAW = 0;
     METADATA_ONLY = 1;
     VALUE_DIGEST = 2;
 
     // include key
-    KEY_VALUE = 3;
+    KEY_VALUE_RAW = 3;
     KEY = 4;
     KEY_VALUE_DIGEST = 5;
 
