@@ -112,7 +112,7 @@ message Key {
 
 }
 
-message Operation {
+message OperationOptions {
 
    int32 timeout = 1;   // timeout in milliseconds
    int64 pit = 2;       // point in time in milliseconds
@@ -149,7 +149,7 @@ message Bucket {
 
 message ScanOperation {
 
-   Operation op = 1;
+   OperationOptions options = 1;
    string tableName = 2;
 
    oneof query {
@@ -163,7 +163,7 @@ message ScanOperation {
 
 message KeyOperation {
 
-   Operation op = 1;
+   OperationOptions options = 1;
    int64 sequenceNum = 2;
    Key key = 3;
    Select select = 4;
@@ -181,7 +181,7 @@ message BatchKeyOperation {
 
 message PutOperation {
 
-   Operation op = 1;
+   OperationOptions options = 1;
    int64 sequenceNum = 2;
    Key key = 3;
    repeated Value value = 4;
