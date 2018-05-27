@@ -83,6 +83,8 @@ message Value {
       bytes  digest = 3;  // used only in output to check integrity of data
     }
 
+    int64 timestamp = 5;  // timestamp of the value
+
 }
 
 message ValueResult {
@@ -112,10 +114,10 @@ message Key {
 
 }
 
-message OperationOptions {
+message RequestOptions {
 
-   int32 timeout = 1;   // timeout in milliseconds
-   int64 pit = 2;       // point in time in milliseconds
+   int32 timeout = 1;   // timeout in milliseconds for SLA
+   int64 pit = 2;       // request point in time in milliseconds, for put operation used as a default timestamp of values
 
 }
 
@@ -125,11 +127,13 @@ enum OutputOptions {
     VALUE_RAW = 0;
     METADATA_ONLY = 1;
     VALUE_DIGEST = 2;
+    VALUE_MAP = 3;
 
     // include key
-    KEY_VALUE_RAW = 3;
-    KEY = 4;
-    KEY_VALUE_DIGEST = 5;
+    KEY_VALUE_RAW = 10;
+    KEY = 11;
+    KEY_VALUE_DIGEST = 12;
+    KEY_VALUE_MAP = 13;
 
 }
 
@@ -149,7 +153,7 @@ message Bucket {
 
 message ScanOperation {
 
-   OperationOptions options = 1;
+   RequestOptions options = 1;
    string tableName = 2;
 
    oneof query {
@@ -163,7 +167,7 @@ message ScanOperation {
 
 message KeyOperation {
 
-   OperationOptions options = 1;
+   RequestOptions options = 1;
    int64 sequenceNum = 2;
    Key key = 3;
    Select select = 4;
@@ -181,7 +185,7 @@ message BatchKeyOperation {
 
 message PutOperation {
 
-   OperationOptions options = 1;
+   RequestOptions options = 1;
    int64 sequenceNum = 2;
    Key key = 3;
    repeated Value value = 4;
