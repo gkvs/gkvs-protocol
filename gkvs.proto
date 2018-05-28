@@ -65,7 +65,7 @@ message Status {
 message StatusResult {
 
     Status status = 1;
-    int64 sequenceNum = 2;
+    int64 requestId = 2;
 }
 
 message Metadata {
@@ -90,7 +90,7 @@ message Value {
 message ValueResult {
 
     Status status  = 1;
-    int64 sequenceNum = 2;
+    int64 requestId = 2;
     Metadata metadata = 3;
     Key key = 4;
     repeated Value value = 5;
@@ -116,8 +116,9 @@ message Key {
 
 message RequestOptions {
 
-   int32 timeout = 1;   // timeout in milliseconds for SLA
-   int64 pit = 2;       // request point in time in milliseconds, for put operation used as a default timestamp of values
+   int64 requestId = 1; // uninue id of each request
+   int32 timeout = 2;   // server side timeout in milliseconds for SLA
+   int64 pit = 3;       // request point in time in milliseconds, for put operation used as a default timestamp of values
 
 }
 
@@ -168,7 +169,7 @@ message ScanOperation {
 message KeyOperation {
 
    RequestOptions options = 1;
-   int64 sequenceNum = 2;
+
    Key key = 3;
    Select select = 4;
 
@@ -186,7 +187,7 @@ message BatchKeyOperation {
 message PutOperation {
 
    RequestOptions options = 1;
-   int64 sequenceNum = 2;
+
    Key key = 3;
    repeated Value value = 4;
    int32 ttl = 5;   // time to live in seconds
