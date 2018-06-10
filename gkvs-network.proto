@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "rocks.gkvs.protos";
+option java_outer_classname = "GenericNetworkProtos";
+option objc_class_prefix = "GKVS";
+
+package gkvs;
+
+service GenericNetwork {
+
+    rpc addNode(Node) returns (Status) {}
+
+    rpc listNodes() returns (NodeList) {}
+
+}
+
+message Status {
+    string status = 1;
+    string error = 2;
+    string errorDetails = 3; 
+}
+
+message Node {
+
+    string id = 1;  
+    string name = 2;
+
+}
+
+message NodeList {
+
+    repeated Node node = 1;
+
+}

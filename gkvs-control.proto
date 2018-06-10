@@ -48,8 +48,3 @@ message ClusterInfoList {
 
 }
 
-message Status {
-
-
-
-}
