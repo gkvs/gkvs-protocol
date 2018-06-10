@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "rocks.gkvs.protos";
+option java_outer_classname = "GenericControlProtos";
+option objc_class_prefix = "GKVS";
+
+package gkvs;
+
+service GenericControl {
+
+    rpc addCluster(Cluster) returns (Status) {}
+
+    rpc listClusters() returns (ClusterInfoList) {}
+
+    rpc connectCluster(string) returns (Status) {}
+
+    rpc disconnectCluster(string) returns (Status) {}
+    
+    rpc removeCluster(string) returns (Status) {}
+
+}
+
+message Status {
+    string status = 1;
+    string error = 2;
+    string errorDetails = 3; 
+}
+
+message Cluster {
+
+    string name = 1;
+    string driver = 2;  
+    string config = 3;
+    bool connectNow = 4;
+
+}
+
+message ClusterInfo {
+
+    Status status = 1;
+    Cluster cluster = 2;
+}
+
+message ClusterInfoList {
+
+    repeated ClusterInfo clusterInfo = 1;
+
+}
+
+message Status {
+
+
+
+}
