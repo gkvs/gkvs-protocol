@@ -11,7 +11,6 @@ service GenericNetwork {
 
     rpc addNode(Node) returns (Status) {}
 
-    rpc listNodes() returns (NodeList) {}
 
 }
 
