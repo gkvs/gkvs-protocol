@@ -28,7 +28,7 @@ message Payload {
 
 message Command {
     string line = 1;
-    repeated Payaload payload = 2;
+    repeated Payload payload = 2;
 }
 
 message Transaction {
