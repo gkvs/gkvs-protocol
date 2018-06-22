@@ -76,14 +76,10 @@ message Metadata {
 
 message Value {
 
-    string column = 1;
-
     oneof value {
       bytes  raw = 2;
       bytes  digest = 3;  // used only in output to check integrity of data
     }
-
-    int64 timestamp = 5;  // timestamp of the value
 
 }
 
@@ -93,7 +89,7 @@ message ValueResult {
     int64 requestId = 2;
     Metadata metadata = 3;
     Key key = 4;
-    repeated Value value = 5;
+    Value value = 5;
 
 }
 
@@ -116,9 +112,8 @@ message Key {
 
 message RequestOptions {
 
-   int64 requestId = 1; // uninue id of each request
+   int64 requestId = 1; // unique id of each request
    int32 timeout = 2;   // server side timeout in milliseconds for SLA
-   int64 pit = 3;       // request point in time in milliseconds, for put operation used as a default timestamp of values
 
 }
 
@@ -189,7 +184,7 @@ message PutOperation {
    RequestOptions options = 1;
 
    Key key = 3;
-   repeated Value value = 4;
+   Value value = 4;
    int32 ttl = 5;   // time to live in seconds
 
    bool compareAndPut = 6;
