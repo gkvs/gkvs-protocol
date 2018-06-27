@@ -33,7 +33,7 @@ enum StatusCode {
      SUCCESS_NOT_UPDATED = 1;  // for compare and put operation that is non-locking algorithm
      SUCCESS_END_STREAM = 2;   // in case of end stream, not payload in return
 
-     ERROR_RES_NOT_FOUND = 10; // not found: database, namespace, table, catalog, etc.
+     ERROR_RES_NOT_FOUND = 10; // not found: database, namespace, store, table, cache, catalog, etc.
      ERROR_BAD_REQUEST = 11;   // invalid parameters in request
      ERROR_POLICY = 12;        // exists record for operation that requires record and vise versa
      ERROR_MIGRATION = 13;     // data or connections migration occur during operation
@@ -101,7 +101,7 @@ message BatchValueResult {
 
 message Key {
 
-    string tableName = 1;
+    string storeName = 1;
 
     oneof recordKey {
       bytes  raw = 2;
@@ -150,7 +150,7 @@ message Bucket {
 message ScanOperation {
 
    RequestOptions options = 1;
-   string tableName = 2;
+   string storeName = 2;
 
    oneof query {
       Select select = 3;
