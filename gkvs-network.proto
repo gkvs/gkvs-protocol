@@ -9,24 +9,43 @@ package gkvs;
 
 service GenericNetwork {
 
-    rpc addNode(Node) returns (Status) {}
-
-
-}
-
-message Status {
-    string status = 1;
-    string error = 2;
-    string errorDetails = 3; 
-}
-
-message Node {
-    string id = 1;  
-    string name = 2;
-}
-
-message NodeList {
-
-    repeated Node node = 1;
+    rpc submit(Command) returns (Reply) {}
 
 }
+
+enum ReplyCode {
+    
+    SUCCESS = 0;
+    
+    ERROR_BAD_REQUEST = 10;  // invalid command
+    ERROR_PAYLOAD = 11;      // payload not found or invalid
+    ERROR_AUTH = 12;         // security configuration and authentication
+    ERROR_FORBIDDEN = 13;    // authorization
+    ERROR_NETWORK = 14;      // can not propagate to network and get confirmations
+    ERROR_UNSUPPORTED = 15;  // command is valid but unsupported
+    ERROR_IO = 16;           // file, serialization, network i/o errors
+    ERROR_INTERNAL = 17;     // all unknown errors
+    
+}
+
+message Reply {
+    
+    ReplyCode status = 1;
+    
+    string message = 10;
+    string details = 11; 
+}
+
+message Payload {
+
+    string  name = 1;    // name of the payload using in after '@' mark in command
+    bytes   value = 2;   // actual payload value in bytes
+}
+
+message Command {
+
+    string line = 1;                // command line with arguments, with payload references
+    repeated Payload payload = 2;   // payloads of the command
+    
+}
+

@@ -27,12 +27,24 @@ service GenericStore {
 
 }
 
+message OperationHeader {
+
+   int64  tag = 1;       // unique id of each call (int64 for Java friendly)
+   uint32 timeout = 2;   // server side timeout in milliseconds for SLA
+}
+
+message ResultHeader {
+
+   int64  tag = 1;      // unique id of each call (int64 for Java friendly)
+   float  elapse = 2;   // server side operation cost in nanoseconds 
+}
+
 enum StatusCode {
 
      SUCCESS = 0;
      SUCCESS_NOT_UPDATED = 1;  // for compare and put operation that is non-locking algorithm
 
-     ERROR_RES_NOT_FOUND = 10; // not found: database, namespace, store, table, cache, catalog, etc.
+     ERROR_RESOURCE = 10;      // not found: database, namespace, store, table, cache, catalog, etc.
      ERROR_BAD_REQUEST = 11;   // invalid parameters in request
      ERROR_POLICY = 12;        // exists record for operation that requires record and vise versa
      ERROR_MIGRATION = 13;     // data or connections migration occur during operation
@@ -44,10 +56,11 @@ enum StatusCode {
      ERROR_OVERFLOW = 19;      // all errors related to data space
      ERROR_LOCKED = 20;        // all tries to update data that was in pessimistic lock
      ERROR_ABORTED = 21;       // client aborted stream operation
-     ERROR_UNSUPPORTED = 22;   // unsupported commands
-     ERROR_DRIVER = 23;        // data access driver specific errors
-     ERROR_IO = 24;            // file, serialization, network i/o errors
-     ERROR_INTERNAL = 25;      // all unknown errors
+     ERROR_END_CQ = 22;        // server aborted stream operation
+     ERROR_UNSUPPORTED = 23;   // unsupported commands
+     ERROR_DRIVER = 24;        // data access driver specific errors
+     ERROR_IO = 25;            // file, serialization, network i/o errors
+     ERROR_INTERNAL = 26;      // all unknown errors
 
 }
 
@@ -55,7 +68,7 @@ message Status {
 
     StatusCode code = 1;
 
-    int32 errorCode = 10;
+    uint32 errorCode = 10;
     string errorMessage = 11;
     string errorDetails = 12;   // place for stackTrace for Java
 
@@ -63,32 +76,35 @@ message Status {
 
 message StatusResult {
 
-    Status status = 1;
-    int64 requestId = 2;
+    ResultHeader header = 1;
+    Status status = 2;
 }
 
 message Metadata {
 
-    int64 version = 1;    // generation of the record
-    int32 ttl = 2;        // time to live in seconds
+    repeated uint32 version = 1;    // version of the value
+    uint32 ttl = 2;                 // left time to live in seconds
 }
 
 message Value {
-
-    oneof value {
-      bytes  raw = 2;
-      bytes  digest = 3;  // used only in output to check integrity of data
-    }
-
+    bytes raw = 1;
 }
 
 message ValueResult {
 
-    Status status  = 1;
-    int64 requestId = 2;
+    ResultHeader header = 1;
+    Status status  = 2;
+    
     Metadata metadata = 3;
     Key key = 4;
     Value value = 5;
+
+}
+
+message BatchKeyOperation {
+
+   // gets max timeout for the batch
+   repeated KeyOperation operation = 1;
 
 }
 
@@ -109,26 +125,15 @@ message Key {
 
 }
 
-message RequestOptions {
-
-   int64 requestId = 1; // unique id of each request
-   int32 timeout = 2;   // server side timeout in milliseconds for SLA
-
-}
-
 enum OutputOptions {
 
-    // exclude key
-    VALUE_RAW = 0;
+    // w/o key
+    VALUE = 0;
     METADATA_ONLY = 1;
-    VALUE_DIGEST = 2;
-    VALUE_MAP = 3;
 
-    // include key
-    KEY_VALUE_RAW = 10;
+    // with key
+    KEY_VALUE = 10;
     KEY = 11;
-    KEY_VALUE_DIGEST = 12;
-    KEY_VALUE_MAP = 13;
 
 }
 
@@ -139,22 +144,20 @@ message Select {
 
 }
 
-message Bucket {
+message Function {
 
-    int32 bucketNum = 1;
-    int32 totalNum = 2;
-
+    string module = 1;
+    string function = 2;
+    repeated bytes arg = 3;    
 }
 
 message ScanOperation {
 
-   RequestOptions options = 1;
+   OperationHeader header = 1;
+   
    string tableName = 2;
-
-   oneof query {
-      Select select = 3;
-      Bucket bucket = 4;
-   }
+   Select select = 3;
+   Function func = 4;
 
    OutputOptions output = 10;
 
@@ -162,31 +165,35 @@ message ScanOperation {
 
 message KeyOperation {
 
-   RequestOptions options = 1;
+   OperationHeader header = 1;
 
    Key key = 3;
    Select select = 4;
+   Function func = 5;
 
    OutputOptions output = 10;
 
 }
 
-message BatchKeyOperation {
+enum UpdatePolicy {
 
-   // gets max timeout for the batch
-   repeated KeyOperation operation = 1;
+    MERGE = 0;
+    REPLACE = 1;
 
 }
 
 message PutOperation {
 
-   RequestOptions options = 1;
+   OperationHeader header = 1;
 
    Key key = 3;
    Value value = 4;
-   int32 ttl = 5;   // time to live in seconds
+   Function func = 5;
+   UpdatePolicy policy = 6;
+   
+   uint32 ttl = 10;   // time to live in seconds
 
-   bool compareAndPut = 6;
-   int64 version = 7;
+   bool compareAndPut = 20;
+   repeated uint32 version = 21;
 
 }
