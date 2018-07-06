@@ -147,7 +147,7 @@ message Select {
 message Function {
 
     string module = 1;
-    string function = 2;
+    string name = 2;
     repeated bytes arg = 3;    
 }
 
