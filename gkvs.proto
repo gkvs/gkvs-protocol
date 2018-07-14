@@ -35,8 +35,8 @@ message OperationHeader {
 
 message ResultHeader {
 
-   int64  tag = 1;      // unique id of each call (int64 for Java friendly)
-   float  elapse = 2;   // server side operation cost in nanoseconds 
+   int64  tag = 1;       // unique id of each call (int64 for Java friendly)
+   float  elapsed = 2;   // server side operation cost in nanoseconds 
 }
 
 enum StatusCode {
@@ -157,7 +157,7 @@ message ScanOperation {
    
    string tableName = 2;
    Select select = 3;
-   Function func = 4;
+   Function mapper = 4;
 
    OutputOptions output = 10;
 
@@ -169,7 +169,7 @@ message KeyOperation {
 
    Key key = 3;
    Select select = 4;
-   Function func = 5;
+   Function mapper = 5;
 
    OutputOptions output = 10;
 
@@ -188,7 +188,7 @@ message PutOperation {
 
    Key key = 3;
    Value value = 4;
-   Function func = 5;
+   Function mapper = 5;
    UpdatePolicy policy = 6;
    
    uint32 ttl = 10;   // time to live in seconds
