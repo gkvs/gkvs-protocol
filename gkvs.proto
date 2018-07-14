@@ -9,6 +9,8 @@ package gkvs;
 
 service GenericStore {
 
+    rpc list(ListOperation) returns (ListResult) {}
+
     rpc get(KeyOperation) returns (ValueResult) {}
 
     rpc multiGet(BatchKeyOperation) returns (BatchValueResult) {}
@@ -116,12 +118,10 @@ message BatchValueResult {
 
 message Key {
 
-    string tableName = 1;
+    string viewName = 1;
 
-    oneof recordKey {
-      bytes  raw = 2;
-      bytes  digest = 3;
-    }
+    // for Aerospike: if recordKey has prefix 'hash!' the rest of the payload is RIPEMD-160 hash (20 bytes)
+    bytes recordKey = 2;
 
 }
 
@@ -155,7 +155,7 @@ message ScanOperation {
 
    OperationHeader header = 1;
    
-   string tableName = 2;
+   string viewName = 2;
    Select select = 3;
    Function mapper = 4;
 
@@ -195,5 +195,34 @@ message PutOperation {
 
    bool compareAndPut = 20;
    repeated uint32 version = 21;
+
+}
+
+enum ListType {
+   
+   VIEWS = 0;
+   CLUSTERS = 1;
+   TABLES = 2;    // path is required, it is the cluster name
+
+}
+
+message ListOperation {
+   
+   ListType type = 1;
+   string path = 2;   
+   
+}
+
+message ListEntry {
+
+   string name = 1;
+   bytes payload = 2;   // payload is in msgpack
+
+}
+
+message ListResult {
+
+    Status status  = 1;
+    repeated ListEntry entry = 2;
 
 }
