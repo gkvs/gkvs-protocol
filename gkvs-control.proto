@@ -2,14 +2,14 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "rocks.gkvs.protos";
-option java_outer_classname = "GenericNetworkProtos";
+option java_outer_classname = "GenericControlProtos";
 option objc_class_prefix = "GKVS";
 
 package gkvs;
 
-service GenericNetwork {
+service GenericControl {
 
-    rpc submit(Command) returns (Reply) {}
+    rpc run(Command) returns (Reply) {}
 
 }
 
@@ -44,7 +44,7 @@ message Payload {
 
 message Command {
 
-    string line = 1;                // command line with arguments, with payload references
+    string cmd = 1;                // command line with arguments, with payload references
     repeated Payload payload = 2;   // payloads of the command
     
 }

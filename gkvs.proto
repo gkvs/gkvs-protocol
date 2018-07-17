@@ -163,6 +163,12 @@ message ScanOperation {
 
 }
 
+enum LookupPolicy {
+   EQ = 0;      // equal key
+   EQ_LT = 1;   // equal or less than
+   EQ_GT = 2;   // equal or greater than
+}
+
 message KeyOperation {
 
    OperationHeader header = 1;
@@ -170,6 +176,9 @@ message KeyOperation {
    Key key = 3;
    Select select = 4;
    Function mapper = 5;
+
+   // for hash-based storages only EQ works
+   LookupPolicy policy = 6;
 
    OutputOptions output = 10;
 
