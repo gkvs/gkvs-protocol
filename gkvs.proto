@@ -120,8 +120,12 @@ message Key {
 
     string viewName = 1;
 
+    // ignored for external clusters
+    // if empty, then data replicated
+    bytes partitionKey = 2;
+
     // for Aerospike: if recordKey has prefix 'hash!' the rest of the payload is RIPEMD-160 hash (20 bytes)
-    bytes recordKey = 2;
+    bytes recordKey = 3;
 
 }
 
@@ -165,8 +169,8 @@ message ScanOperation {
 
 enum LookupPolicy {
    EQ = 0;      // equal key
-   EQ_LT = 1;   // equal or less than
-   EQ_GT = 2;   // equal or greater than
+   EQ_LT = 1;   // equal or less than, ignored by unordered data sets
+   EQ_GT = 2;   // equal or greater than, ignored by unordered data sets
 }
 
 message KeyOperation {
